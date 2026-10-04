@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: postgres-pk-benchmark
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-user_benchmark_db}
+      POSTGRES_USER: ${POSTGRES_USER:-benchmark_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-benchmark_secret_pass}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5433}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-benchmark_admin} -d ${POSTGRES_DB:-user_benchmark_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pg_data:
